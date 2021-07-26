@@ -1,0 +1,58 @@
+<div class="tile">
+
+  <div class="filter">
+    <mat-form-field>
+      <mat-label> Start Date </mat-label>
+      <input matInput [matDatepicker]="start_date" [formControl]="startDate">
+      <mat-datepicker-toggle matSuffix [for]="start_date"></mat-datepicker-toggle>
+      <mat-datepicker #start_date></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label> End Date </mat-label>
+      <input matInput [matDatepicker]="end_date" [formControl]="endDate">
+      <mat-datepicker-toggle matSuffix [for]="end_date"></mat-datepicker-toggle>
+      <mat-datepicker #end_date></mat-datepicker>
+    </mat-form-field>
+  </div>
+
+  <div [hidden]="!filteredHotels?.length">
+    <table mat-table [dataSource]="dataSource" matSort matSortActive="price" matSortDirection="desc" matSortDisableClear>
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Number </th>
+        <td mat-cell *matCellDef="let item"> {{ item.id }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="capacity">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Capacity </th>
+        <td mat-cell *matCellDef="let item"> {{ item.capacity }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Price </th>
+        <td mat-cell *matCellDef="let item"> ${{ item.price }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th class="actions" mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let item">
+          <mat-icon (click)="onMakeReservation(item.id)" matTooltip="Make Reservation" mat-list-icon >home</mat-icon>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
+  </div>
+
+  <div
+    class="nothing-found"
+    *ngIf="!filteredHotels?.length && !loading"  
+  >
+    No data found matching your criteria
+  </div>
+
+</div>
+
+<mat-spinner *ngIf="loading"></mat-spinner>
